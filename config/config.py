@@ -1,0 +1,11 @@
+import os
+
+DATASET_NAME = "mnist"
+NUM_ORGANIZATIONS = 3
+TOTAL_TRAINING_TIME = 10000
+LOCAL_EPOCHS = 5
+PROCESSING_CAPACITIES = [100, 200, 150]
+COST_PER_UNIT = 0.1
+
+MODEL_SAVE_PATH = os.path.join("saved_models", "global_model.h5")
+LOGGING_LEVEL = "INFO"
