@@ -47,21 +47,21 @@ The incentive mechanism implemented in this project is inspired by the concept o
 
 #### Utility Calculation
 Utility represents the benefit an organization provides to the global model. It is calculated as:
-\[ \text{Utility} = \text{processing\_capacity} \times \text{data\_size} \times \alpha \]
+$$ \text{Utility} = \text{processing\_capacity} \times \text{data\_size} \times \alpha $$
 
 #### Cost Calculation
 Cost represents the resources expended by an organization during local training. It is calculated as:
-\[ \text{Cost} = \text{processing\_capacity} \times \text{data\_size} \times \text{cost\_per\_unit} \]
+$$ \text{Cost} = \text{processing\_capacity} \times \text{data\_size} \times \text{cost\_per\_unit} $$
 
 #### Compensation Calculation
 Compensation is the amount rewarded to an organization after subtracting its cost from its utility. This ensures that organizations are fairly compensated for their contributions:
-\[ \text{Compensation} = \max(\text{Utility} - \text{Cost}, \text{minimum\_compensation}) \]
+$$ \text{Compensation} = \max(\text{Utility} - \text{Cost}, \text{minimum\_compensation}) $$
 
 #### Fairness Mechanism
 To ensure fairness among participating organizations, a fairness metric is used. The fairness mechanism ensures that the disparity in utilities among organizations does not exceed a specified threshold (`epsilon`). If the fairness metric exceeds this threshold, compensations are adjusted accordingly.
 
 - **Fairness Metric**: 
-  \[ \text{Fairness\_metric} = \max(\text{utilities}) - \min(\text{utilities}) \]
+  $$ \text{Fairness\_metric} = \max(\text{utilities}) - \min(\text{utilities}) $$
 
 - **Redistribute Compensations**: If the fairness metric exceeds the specified threshold (`epsilon`), compensations are adjusted to maintain balance:
   ```python

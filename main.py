@@ -1,5 +1,5 @@
 import asyncio
-from config.config import DATASET_NAME, NUM_ORGANIZATIONS, TOTAL_TRAINING_TIME, LOCAL_EPOCHS, PROCESSING_CAPACITIES, COST_PER_UNIT, MODEL_SAVE_PATH
+from config.config import DATASET_NAME, NUM_ORGANIZATIONS, TOTAL_TRAINING_TIME, LOCAL_EPOCHS, PROCESSING_CAPACITIES, COST_PER_UNIT, MODEL_SAVE_PATH, FAIRNESS_EPSILON
 from data.data_handling import load_data, split_data
 from training.training import federated_learning
 from utils.utils import save_model
