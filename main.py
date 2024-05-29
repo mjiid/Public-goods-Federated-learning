@@ -12,7 +12,7 @@ async def main():
         (X_train, y_train), (X_test, y_test) = load_data(DATASET_NAME)
         dataset_splits = split_data(X_train, y_train, NUM_ORGANIZATIONS)
         
-        final_model, compensations = await federated_learning(dataset_splits, TOTAL_TRAINING_TIME, LOCAL_EPOCHS, PROCESSING_CAPACITIES, COST_PER_UNIT)
+        final_model, compensations = await federated_learning(dataset_splits, TOTAL_TRAINING_TIME, LOCAL_EPOCHS, PROCESSING_CAPACITIES, COST_PER_UNIT, FAIRNESS_EPSILON)
         
         save_model(final_model, MODEL_SAVE_PATH)
         logging.info("Final compensations: %s", compensations)
