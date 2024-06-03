@@ -4,6 +4,7 @@ import asyncio
 import nest_asyncio
 from model.model import initialize_global_model, local_training
 from mechanism.incentive_mechanism import calculate_utility_and_cost, calculate_compensation, redistribute_compensation, should_participate
+from data.data_handling import split_data
 
 logging.basicConfig(level=logging.INFO)
 
@@ -27,23 +28,25 @@ async def async_local_training(global_weights, data, local_epochs):
     client_update = [new_w - global_w for new_w, global_w in zip(new_weights, global_weights)]
     return client_update
 
-async def federated_learning(dataset_splits, total_time, local_epochs, processing_capacities, cost_per_unit, epsilon=0.1):
+async def federated_learning(X_train, y_train, num_splits, total_time, local_epochs, processing_capacities, cost_per_unit, epsilon=0.1):
     try:
         global_model = initialize_global_model()
         global_weights = global_model.get_weights()
-        num_organizations = len(dataset_splits)
-        rounds = int(total_time / local_epochs)
-        
-        utilities = [0] * num_organizations
-        costs = [0] * num_organizations
+        rounds = total_time // local_epochs
+
+        utilities = [0] * num_splits
+        costs = [0] * num_splits
         
         for r in range(rounds):
             logging.info(f"Round {r + 1}/{rounds}")
 
+            # Shuffle and split data for this round
+            dataset_splits = split_data(X_train, y_train, num_splits)
+            
             # Pre-Participation Check
             participants = [
-                i for i in range(num_organizations)
-                if should_participate(processing_capacities[i], len(dataset_splits[i][0]), cost_per_unit, 1)
+                i for i in range(num_splits)
+                if should_participate(processing_capacities[i], len(dataset_splits[i][0]), cost_per_unit, 1, 1)
             ]
             
             tasks = [

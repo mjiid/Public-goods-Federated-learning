@@ -2,7 +2,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-def should_participate(processing_capacity, data_size, cost_per_unit, alpha):
+def should_participate(processing_capacity, data_size, cost_per_unit, alpha, beta):
     utility = processing_capacity * data_size * alpha
     cost = processing_capacity * data_size * cost_per_unit
     return utility > cost

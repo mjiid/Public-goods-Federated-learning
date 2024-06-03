@@ -8,10 +8,7 @@ def save_model(model, path):
         if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
         
-        if not path.endswith(".keras"):
-            path = path + ".keras"
-        
-        model.save(path)
+        model.save(path, save_format='tf')
         logging.info("Model saved successfully at %s", path)
     except Exception as e:
         logging.error(f"Error saving model: {e}")

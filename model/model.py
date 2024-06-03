@@ -7,11 +7,11 @@ logging.basicConfig(level=logging.INFO)
 def initialize_global_model():
     try:
         model = keras.models.Sequential([
-            keras.layers.Flatten(input_shape=(28, 28)),
-            keras.layers.Dense(128, activation='relu'),
-            keras.layers.Dense(10, activation='softmax')
+            keras.layers.Dense(64, activation='relu', input_shape=(10,)),
+            keras.layers.Dense(64, activation='relu'),
+            keras.layers.Dense(1)
         ])
-        model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+        model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss='mean_squared_error', metrics=['mean_absolute_error'])
         logging.info("Global model initialized successfully.")
         return model
     except Exception as e:
