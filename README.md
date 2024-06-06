@@ -11,7 +11,7 @@ This project provides an implementation of **Federated Learning**, a machine lea
 
 ### Requirements
 - Python 3.7 or later
-- Required Python packages: numpy, asyncio, nest_asyncio
+- Required Python packages: numpy, asyncio, nest_asyncio, tensorflow
 
 ### Installation
 1. Clone the repository:

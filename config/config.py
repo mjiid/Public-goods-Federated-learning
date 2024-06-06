@@ -2,11 +2,12 @@ import os
 import numpy as np
 
 DATASET_NAME = "diabetes"
-NUM_ORGANIZATIONS = 10 
-TOTAL_TRAINING_TIME = 2000 
-LOCAL_EPOCHS = 20 
-PROCESSING_CAPACITIES = [np.random.uniform(0.8, 1.2) for _ in range(NUM_ORGANIZATIONS)] 
-COST_PER_UNIT = 0.05
+NUM_ORGANIZATIONS = 2
+TOTAL_TRAINING_TIME = 10000
+LOCAL_EPOCHS = 100
+BATCH_SIZE = 32
+PROCESSING_CAPACITIES = [np.random.uniform(0.5, 1.5) for _ in range(NUM_ORGANIZATIONS)]
+COST_PER_UNIT = 0.1
 FAIRNESS_EPSILON = 0.1
-MODEL_SAVE_PATH = os.path.join("saved_models", "global_model")
+MODEL_SAVE_PATH = os.path.join("saved_models", "global_model.h5")
 LOGGING_LEVEL = "INFO"

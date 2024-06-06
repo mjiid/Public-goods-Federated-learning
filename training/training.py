@@ -2,6 +2,7 @@ import numpy as np
 import logging
 import asyncio
 import nest_asyncio
+from tensorflow import keras
 from model.model import initialize_global_model, local_training
 from mechanism.incentive_mechanism import calculate_utility_and_cost, calculate_compensation, redistribute_compensation, should_participate
 from data.data_handling import split_data
@@ -17,18 +18,21 @@ def aggregate(client_updates):
             for i in range(len(aggregated_update)):
                 aggregated_update[i] += update[i] / len(client_updates)
         return aggregated_update
-    except Exception as e:
+    except (ValueError, TypeError, Exception) as e:
         logging.error(f"Error in aggregation: {e}")
         raise
 
-async def async_local_training(global_weights, data, local_epochs):
-    local_model = initialize_global_model()
-    local_model.set_weights(global_weights)
-    new_weights = await asyncio.to_thread(local_training, local_model, data, local_epochs)
-    client_update = [new_w - global_w for new_w, global_w in zip(new_weights, global_weights)]
-    return client_update
+async def async_local_training(global_weights, data, local_epochs, batch_size=32):
+    try:
+        local_model = initialize_global_model()
+        local_model.set_weights(global_weights)
+        new_weights = await asyncio.to_thread(local_training, local_model, data, local_epochs, batch_size)
+        return [(new_w - global_w) for new_w, global_w in zip(new_weights, global_weights)]
+    except (ValueError, TypeError, Exception) as e:
+        logging.error(f"Error in async local training: {e}")
+        raise
 
-async def federated_learning(X_train, y_train, num_splits, total_time, local_epochs, processing_capacities, cost_per_unit, epsilon=0.1):
+async def federated_learning(X_train, y_train, num_splits, total_time, local_epochs, processing_capacities, cost_per_unit, batch_size=32, epsilon=0.1):
     try:
         global_model = initialize_global_model()
         global_weights = global_model.get_weights()
@@ -41,7 +45,10 @@ async def federated_learning(X_train, y_train, num_splits, total_time, local_epo
             logging.info(f"Round {r + 1}/{rounds}")
 
             # Shuffle and split data for this round
-            dataset_splits = split_data(X_train, y_train, num_splits)
+            perm = np.random.permutation(len(X_train))
+            X_train_shuffled = X_train[perm]
+            y_train_shuffled = y_train[perm]
+            dataset_splits = split_data(X_train_shuffled, y_train_shuffled, num_splits)
             
             # Pre-Participation Check
             participants = [
@@ -50,7 +57,7 @@ async def federated_learning(X_train, y_train, num_splits, total_time, local_epo
             ]
             
             tasks = [
-                async_local_training(global_weights, dataset_splits[i], local_epochs) 
+                async_local_training(global_weights, dataset_splits[i], local_epochs, batch_size) 
                 for i in participants
             ]
             client_updates = await asyncio.gather(*tasks)
@@ -69,6 +76,6 @@ async def federated_learning(X_train, y_train, num_splits, total_time, local_epo
         
         logging.info("Federated learning completed successfully.")
         return global_model, compensations
-    except Exception as e:
+    except (ValueError, TypeError, Exception) as e:
         logging.error(f"Error during federated learning: {e}")
         raise
