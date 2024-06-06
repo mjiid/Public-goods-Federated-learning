@@ -36,7 +36,7 @@ def calculate_utility_and_cost(processing_capacity, data_size, cost_per_unit):
 
 def calculate_compensation(utilities, costs, minimum_compensation=0):
     try:
-        compensations = [max(c - u, minimum_compensation) for u, c in zip(utilities, costs)]
+        compensations = [max(u - c, minimum_compensation) for u, c in zip(utilities, costs)]
         logging.info("Compensation calculated successfully.")
         return compensations
     except Exception as e:
